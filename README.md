@@ -55,7 +55,7 @@ These instructions provide a detailed guide on how to set up and run the Palkkat
         DB_NAME=Palkkatukilaskuri // The name of the database you created
 
         CLIENT_USERNAME=admin   // The default username for the application
-        CLIENT_HASHED_PASSWORD=admin123  // The default *hashed* password - ideally, you would hash this before storing it.
+        CLIENT_HASHED_PASSWORD=$2a$12$gYYwPZFh8G31f.3ZdeemaeTxks2JHC/WNCpZji9d4jj3I0GHLWPma  // The default *hashed* password - ideally, you would hash this before storing it.
         ```
 
         **Important Security Notes:**
