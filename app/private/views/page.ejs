@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/../images/favicon.ico">
+    <title>Palkkatuki - <%= page.title %></title>
+    <link rel="stylesheet" href="/../stylesheets/style.css">
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div class="flex rows page">
+					<div id="breadcrumbs" class="align-center">
+						<a href="/../">Etusivu</a>
+						<% for(var i=0; i<breadcrumbs.length; i++) { %>
+							<span>></span>
+							<a href="/../sivu/<%= breadcrumbs[i].id %>"><%= breadcrumbs[i].title %></a>
+						<% } %>
+					</div>
+					<h2><%= page.title %></h2>
+					<div class="full-width">
+						<%- page.text %>
+					</div>
+					<div id="child-pages" class="flex columns">
+						<% for(var i=0; i<page.subpages.length; i++) { %>
+							<a href="/../sivu/<%= page.subpages[i].id %>"class="button space-around"><%= page.subpages[i].title %></a>
+						<% } %>
+					</div>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>

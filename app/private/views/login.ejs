@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="/../images/favicon.ico">
+	<title>Palkkatuki - Kirjautuminen</title>
+	<link rel="stylesheet" href="/../stylesheets/style.css">
+	<script type="text/javascript" src="/../scripts/utilities.js"></script>
+	<script defer type="text/javascript" src="/../scripts/login.js"></script>
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div class="flex rows full-width">
+					<div class="flex rows window">
+						<div class="flex rows width-400 align-self-center">
+							<div id="login-notification" class="notification hidden"></div>
+							<h2>Kirjaudu hallintapaneeliin</h2>
+							<h4>Käyttäjätunnus:</h4>
+							<input required id="username-input" type="text" placeholder="Käyttäjätunnus...">
+							<h4>Salasana:</h4>
+							<input required id="password-input" type="password" placeholder="Salasana...">
+							<button id="login-button" class="button space-on-top">Kirjaudu sisään</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>

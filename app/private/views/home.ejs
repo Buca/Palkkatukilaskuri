@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/../images/favicon.ico">
+    <title>Palkkatuki</title>
+    <link rel="stylesheet" href="/../stylesheets/style.css">
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div class="flex rows tab">
+					<h1>Palkkatukiopas</h1>
+					<nav class="flex rows">
+						<% firstLevelOfPages.forEach(page => { %>
+					        <h2>
+					            <a href="/../sivu/<%= page.id %>">
+					                <span class="text"><%= page.title %></span>
+					                <span class="arrow-right-icon icon"></span>
+					            </a>
+					        </h2>
+					    <% }); %>
+					</nav>
+				</div>
+				<div class="flex rows tab">
+					<h1>
+						<a href="/../laskuri">
+							<span class="text">Palkkatukilaskuri</span>
+							<span class="arrow-right-icon icon"></span>
+						</a>
+					</h1>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>

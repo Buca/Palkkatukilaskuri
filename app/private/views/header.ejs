@@ -1,0 +1,27 @@
+<header class="flex columns">
+	<img class="logo" src="/../images/yrityssalo-logo.png" alt="yrityssalo-logo">
+	<% if ( isAuthenticated ) { %>
+	<div class="component flex rows">
+		<div class="entry flex columns">
+			<div class="logout-icon icon"></div>
+			<a href="/../logout">Kirjaudu ulos</a>
+		</div>
+		<div class="entry flex columns">
+			<div class="articles-icon icon"></div>
+			<a href="/../hallinta">Hallintapaneeli</a>
+		</div>
+	</div>
+	<% } else { %>
+	<div id="apua-component" class="component flex rows">
+		<h5>Kaipaatko apua?</h5>
+		<div class="entry flex columns">
+			<div class="phone-icon icon"></div>
+			<span><%= contactInfo.number %></span>
+		</div>
+		<div class="entry flex columns">
+			<div class="email-icon icon"></div>
+			<span><%= contactInfo.email %></span>
+		</div>
+	</div>
+	<% } %>
+</header>

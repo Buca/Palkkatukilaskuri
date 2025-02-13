@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/../images/favicon.ico">
+    <title>Palkkatuki - Laskuri</title>
+    <link rel="stylesheet" href="/../stylesheets/style.css">
+    <script defer type="text/javascript" src="/../scripts/calculator.js"></script>
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div class="flex rows tab">
+					<% let questionIndex = 1; %>
+					<% for (const question in questions) { %>
+					    <h4 class="align-text-center capitalize"><%= question %></h4>
+					    <div class="question" class="flex columns">
+					        <% let answerIndex = 1; %>
+					        <% questions[question].forEach(answer => { %>
+					            <div>
+					                <input id="q<%= questionIndex %>a<%= answerIndex %>" type="radio" name="<%= question %>" value="<%= answer %>">
+					                <label for="q<%= questionIndex %>a<%= answerIndex %>"><%= answer %></label>
+					            </div>
+					            <% answerIndex++; %>
+					        <% }) %>
+					    </div>
+					    <% questionIndex++; %>
+					<% } %>
+				</div>
+				<div id="results" class="flex rows tab">
+					<h2>Tulos</h2>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>

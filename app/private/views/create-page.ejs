@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/../images/favicon.ico">
+    <title>Palkkatuki - Uusi sivu</title>
+    <link href="/../stylesheets/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="/../stylesheets/style.css">
+	<script src="/../scripts/quill.min.js"></script>
+	<script type="text/javascript" src="/../scripts/utilities.js"></script>
+    <script defer src="/../scripts/editor-page.js"></script>
+    <script defer src="/../scripts/create-page.js"></script>
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div id="edit-page" class="flex rows page">
+					<div id="breadcrumbs" class="align-center">
+						<a href="/../">Etusivu</a>
+						<% for(var i=0; i<breadcrumbs.length; i++) { %>
+							<span>></span>
+							<a href="/../sivu/<%= breadcrumbs[i].id %>"><%= breadcrumbs[i].title %></a>
+						<% } %>
+						<span>></span>
+						<a></a>
+					</div>
+					<input id="page-title" class="title space-on-top" type="text" value="" placeholder="Otsikko...">
+					<div id="editor"></div>
+					<div class="flex space-around full-width">
+						<button id="publish-button" class="align-self-left space-on-right button flex columns align-center">
+							<div class="icon add-icon small-icon space-on-right"></div>
+							<div>Julkaise</div>
+						</button>
+						<button id="cancel-button" class="button flex columns align-center">
+							<div class="icon cancel-icon small-icon space-on-right"></div>
+							<div>Peruuta</div>
+						</button>
+					</div>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>

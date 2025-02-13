@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/../images/favicon.ico">
+    <title>Palkkatuki - <%= status %></title>
+    <link rel="stylesheet" href="/../stylesheets/style.css">
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div class="flex rows full-width">
+					<div class="window flex align-center rows">
+						<h1><%= status %></h1>
+						<h4><%= message %></h4>
+					</div>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>

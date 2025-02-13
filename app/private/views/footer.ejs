@@ -1,0 +1,16 @@
+<footer class="flex columns">
+	<ul>
+		<li><a href="#">Etusivu</a></li>
+		<li><a href="#">Palkkalaskuri</a></li>
+	</ul>
+	<ul>
+	    <% firstLevelOfPages.forEach(page => { %>
+	        <li><a href="/../sivu/<%= page.id %>"><%= page.title %></a></li>
+	    <% }); %>
+	</ul>
+	<div id="apua-footer-component" class="flex rows">
+		<h5>Tarvitsetko apua?</h5>
+		<div><%= contactInfo.number %></div>
+		<div><%= contactInfo.email %></div>
+	</div>
+</footer>

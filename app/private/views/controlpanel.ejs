@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="/../images/favicon.ico">
+	<title>Palkkatuki - Hallintapaneeli</title>
+	<link rel="stylesheet" href="/../stylesheets/style.css">
+	<script type="text/javascript" src="/../scripts/utilities.js"></script>
+	<script defer type="text/javascript" src="/../scripts/controlpanel.js"></script>
+</head>
+	<body>
+		<div id="root-container" class="flex">
+			<%- include('header') -%>
+			<div id="content-container" class="flex">
+				<div class="flex rows full-width">
+					<div class="window">
+						<h2>Palkkatukilaskuri</h2>
+						<div class="flex rows">
+							<div id="drop-file" class="flex rows width-400">
+								<div class="upload-icon icon"></div>
+								<h4>Raahaa ja tiputa tiedosto</h4>
+								<h5>tai <span class="etsi-tiedosto">etsi</span> tiedosto laitteesta</h5>
+								<div id="allowed-file-types">
+									sallitut tiedostontyypit ovat <code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>
+								</div>
+							</div>
+							<diV class="flex columns justify-center">
+								<button disabled id="upload-file-button" class="button space-around">Lähetä tiedosto</button>
+								<button disabled id="cancel-upload-file-button" class="button space-around">Peruuta</button>
+								<a href="/../laskuri/lataa-nykyinen" class="button space-around">Lataa nykyinen</a>
+							</diV>
+						</div>
+					</div>
+					<div class="flex rows window">
+						<h2>Palkkatukiopas</h2>
+						<ul id="list-of-pages">
+							<li>
+								<div class="flex align-center">
+									<a href="/../" class="title">Etusivu</a>
+									<a href="/../sivu/juuri/uusi" class="add-page button add-icon icon space-on-right"></a>
+								</div>
+								<ul>
+									<% function renderPages(pages) { %>
+										<% pages.forEach((page, index) => { %>
+											<li>
+												<div class="flex align-center">
+													<a href="/sivu/<%= page.id %>" class="title"><%= page.title %></a>
+													<button class="move-up button move-up-icon icon" data-id="<%= page.id %>"></button>
+													<button class="move-down button move-down-icon icon" data-id="<%= page.id %>"></button>
+													<a href="/sivu/<%= page.id %>/uusi" class="add-page button add-icon icon"></a>
+													<button page-id="<%= page.id %>" class="remove-page button delete-icon icon"></button>
+													<a href="/sivu/<%= page.id %>/muokkaa" class="edit-page button edit-icon icon space-on-right"></a>
+												</div>
+												<% if (page.children && page.children.length > 0) { %>
+													<ul>
+														<%= renderPages(page.children) %>
+													</ul>
+												<% } %>
+											</li>
+										<% }); %>
+									<% } %>
+
+									<%= renderPages(pages) %>
+								</ul>
+							
+							</li>
+						</ul>
+					</div>
+					<div class="flex rows window">
+						<h2>Yhteistiedot</h2>
+						<h4>Puhelin numero:</h4>
+						<input id="number-input" type="tel" value="<%= contactInfo.number %>">
+						<h4>Sähköposti osoite:</h4>
+						<input id="email-input" type="email" value="<%= contactInfo.email %>">
+						<button id="update-contact-info-button" class="button space-on-top">Päivitä</button>
+					</div>
+				</div>
+			</div>
+			<%- include('footer') -%>
+		</div>
+	</body>
+</html>
