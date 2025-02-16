@@ -45,70 +45,71 @@ async function removePage() {
 };
 
 document.querySelectorAll(".move-up").forEach(button => {
-
-	button.addEventListener("click", () => {
-
-		movePage(button.dataset.id, "up");
-
-	});
-
+    button.addEventListener("click", async () => {
+        await movePage(button.dataset.id, "up");
+        updateMoveButtons(); // Disable buttons if needed
+    });
 });
 
-
 document.querySelectorAll(".move-down").forEach(button => {
-
-	button.addEventListener("click", () => {
-
-		document.activeElement.blur();
-		movePage(button.dataset.id, "down");
-
-	});
-
+    button.addEventListener("click", async () => {
+        document.activeElement.blur();
+        await movePage(button.dataset.id, "down");
+        updateMoveButtons(); // Disable buttons if needed
+    });
 });
 
 async function movePage(pageId, direction) {
-    
     const response = await fetch(`/sivu/reorder`, {
-    
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pageId, direction })
-    
     });
 
     const content = await response.json();
 
-    if ( content.success ) {
-        
+    if (content.success) {
         const pageElement = document.querySelector(`button[data-id="${pageId}"]`).closest("li");
-
         if (!pageElement) return;
 
         const sibling = direction === "up"
             ? pageElement.previousElementSibling
             : pageElement.nextElementSibling;
 
-        if (!sibling) return; // No valid sibling to swap with
+        if (!sibling) return;
 
         const parent = pageElement.parentElement;
 
         if (direction === "up") {
-        
             parent.insertBefore(pageElement, sibling);
-        
         } else {
-        
             parent.insertBefore(sibling, pageElement);
-        
         }
 
+        updateMoveButtons(); // Update the button states after movement
     } else {
-
         redirect('/../login');
-
     }
+}
 
-};
+function updateMoveButtons() {
+    document.querySelectorAll("li").forEach(li => {
+        const moveUpButton = li.querySelector(".move-up");
+        const moveDownButton = li.querySelector(".move-down");
+
+        if (!moveUpButton || !moveDownButton) return;
+
+        // Disable "up" button if it's the first child
+        moveUpButton.disabled = !li.previousElementSibling;
+
+        // Disable "down" button if it's the last child
+        moveDownButton.disabled = !li.nextElementSibling;
+    });
+}
+
+// Run this once when the page loads to set the correct initial states
+updateMoveButtons();
+
 
 
 // Updating contact information
