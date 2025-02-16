@@ -440,6 +440,7 @@ h4 {
 			#editor {
 
 				width: 100%;
+				z-index: 1;
 
 			}
 
@@ -475,34 +476,27 @@ h4 {
 			padding: 20px;
 			margin: 6px;
 
-			p {
+			h2 {
 
-				font-size: 18px;
-
-			}
-
-			.link {
-
-				color: #1995ff;
-				text-decoration: underline;
+				margin-top: 32px;
+				margin-bottom: 12px;
 
 			}
 
-			.bold {
+			.page-content {
 
-				font-weight: bold;
+				p {
 
-			}
+					font-size: 18px;
 
-			.underline {
+				}
 
-				text-decoration: underline;
+				a {
 
-			}
+					color: #1995ff;
+					text-decoration: underline;
 
-			.italic {
-
-				font-style: italic;
+				}
 
 			}
 
