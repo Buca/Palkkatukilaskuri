@@ -14,13 +14,13 @@ const loginRateLimiter = rateLimit({
 	
 	handler: (req, res, next) => {
 
-    	res.status(429).json({
-    		success: false,
-      		message: "Too many login attempts. Please try again later.",
-      		retryAfter: Math.ceil(req.rateLimit.resetTime - Date.now()) / 1000, // Retry time in seconds
-    	});
+		res.status(429).json({
+			success: false,
+			message: "Too many login attempts. Please try again later.",
+			retryAfter: Math.ceil(req.rateLimit.resetTime - Date.now()) / 1000, // Retry time in seconds
+		});
 
-  	}
+	}
 
 });
 
@@ -99,7 +99,7 @@ router.get("/logout", (req, res, next) => {
 		
 		}
 
-    	res.redirect("/login"); // Redirect to login page after logout
+		res.redirect("/login"); // Redirect to login page after logout
 
 	});
 
