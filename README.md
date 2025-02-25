@@ -1,5 +1,4 @@
-
-## Setting up and Running the Palkkatukilaskuri Application
+# **Setting up and Running the Palkkatukilaskuri Application**
 
 These instructions provide a detailed guide on how to set up and run the Palkkatukilaskuri application. Please follow these steps carefully.
 
@@ -80,3 +79,57 @@ These instructions provide a detailed guide on how to set up and run the Palkkat
 * **Port in use:** If you get an error that the port is already in use, change the `SERVER_PORT` in your `.env` file to a different port.
 * **Database connection:** Double-check that the database credentials in your `.env` file are correct and that the PostgreSQL server is running.
 * **Missing dependencies:** If you get "module not found" errors, make sure you have run `npm install` in the `app` directory.
+
+
+
+# **Excel Sheet Formatting Guide for Palkkatukilaskuri**
+
+This document explains how to structure the **Excel sheet** (`Palkkatukilaskuri.xlsx`) to work correctly with the `extractQuestions()` and `getResponse()` functions.
+
+## **Sheet Name**
+- The relevant sheet should be named **"taustamatriisi"**.
+- Data from this sheet is converted to **JSON format** for processing.
+
+## **Column Structure**
+The first row of the sheet must contain column headers. The structure is as follows:
+
+| yhteenveto | Question 1 | Question 2 | ... | Question N | Response 1 | Response 2 | ... | Response M |
+|------------|-----------|-----------|-----|-----------|-----------|-----------|-----|-----------|
+| Value 1   | A         | X         | ... | Z         | 10%       | 1000 €    | ... | Note 1    |
+| Value 2   | B         | Y         | ... | W         | 20%       | 2000 €    | ... | Note 2    |
+
+### **1. yhteenveto (Summary Column)**
+- The **first column (`yhteenveto`)** must contain a **semicolon-separated string** summarizing the responses from the question columns.
+- Example:
+  - `"Option A;Option X;Option Z"` → This uniquely identifies a combination of answers.
+
+### **2. Question Columns**
+- All **question columns** are located **immediately after** `yhteenveto`.
+- The number of questions is determined **dynamically** by counting the number of semicolon-separated values in `yhteenveto`.
+- Each row contains **one possible answer** for each question.
+
+### **3. Response Columns**
+- Columns **after the last question** contain responses that will be returned when a matching `yhteenveto` value is found.
+- These responses include:
+  - **Numeric values** (e.g., percentages, monetary values)
+  - **Text-based messages** (e.g., warnings or additional notes)
+
+## **Data Processing Rules**
+1. **Extracting Questions (`extractQuestions()`)**
+   - The function reads all **question columns** and collects unique answer options for each question.
+   - Answers are extracted uniquely (duplicates are ignored).
+
+2. **Getting Response (`getResponse()`)**
+   - When a user selects answers, their response is **matched** against the `yhteenveto` column.
+   - If a match is found, response columns (e.g., percentages, max support per month) are returned.
+   - **Formatting Adjustments**:
+     - The percentage value (`prosentti`) is multiplied by **100** and appended with `" %"`
+     - Monetary values (`tuki maksimissaan kuukaudessa`) are appended with `" €"`
+     - Notes (`huom!` and `huom! 2`) are cleaned and combined under `"Huomioitavaa"`.
+
+## **Example Data Format**
+```plaintext
+yhteenveto               | Question 1 | Question 2 | Question 3 | prosentti | tuki maksimissaan kuukaudessa | huom!
+-------------------------|------------|------------|------------|-----------|--------------------------------|----------
+Option A;Option X;Option Z | A          | X          | Z          | 0.1       | 1000 €                         | Important note.
+Option B;Option Y;Option W | B          | Y          | W          | 0.2       | 2000 €                         | Another note.
