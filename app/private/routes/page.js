@@ -1,3 +1,4 @@
+const { sanitizeHtml } = require('sanitize-html');
 const express = require('express');
 const router = express.Router();
 const { getPageById, editPageById, removePageById, createPage, getBreadcrumbsById, getFirstLevelOfPages, movePageUp, movePageDown } = require('../models/Page');
@@ -93,8 +94,10 @@ router.post("/juuri/uusi", async (req, res, next) => {
 		
 		}
 
+		const sanitizedHTML = sanitizeHtml( html );
+
 		// Create a new page with no parent (root-level)
-		const page = await createPage(title, html, null);
+		const page = await createPage(title, sanitizedHTML, null);
 
 		res.json({
 			
@@ -179,8 +182,10 @@ router.post("/:parentId?/uusi", async (req, res, next) => {
 		
 		}
 
+		const sanitizedHTML = sanitizeHtml( html );
+
 		// Create a new page with the given parent ID
-		const newPage = await createPage(title, html, parentId);
+		const newPage = await createPage(title, sanitizedHTML, parentId);
 	
 		res.json({ success: true });
 
@@ -250,8 +255,10 @@ router.post("/:id/muokkaa", async (req, res, next) => {
 			return res.redirect("/../login"); // Redirect if not authenticated
 		}
 
+		const sanitizedHTML = sanitizeHtml( html );
+
 		// Update the page with new content
-		const updatedPage = await editPageById(pageId, title, html);
+		const updatedPage = await editPageById(pageId, title, sanitizedHTML);
 
 		if (!updatedPage) {
 			next(); // Page not found, trigger 404 handler
