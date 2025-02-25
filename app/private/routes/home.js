@@ -7,7 +7,7 @@ const { getContactInfo } = require('../models/ContactInformation');
 router.get('/', async (req, res, next) => {
   
 	try {
-	    
+		
 		const isAuthenticated = req.session.isAuthenticated; // Check if the user is authenticated
 		const contactInfo = await getContactInfo(); // Fetch contact details
 		const firstLevelOfPages = await getFirstLevelOfPages(); // Get top-level pages
