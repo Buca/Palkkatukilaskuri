@@ -14,6 +14,7 @@ function onInput() {
 };
 
 const quill = new Quill('#editor', {
+	
 	modules: {
 		toolbar: [
 			['bold', 'italic', 'underline', 'strike'],
@@ -24,4 +25,5 @@ const quill = new Quill('#editor', {
 	},
 	placeholder: '',
 	theme: 'snow', // or 'bubble'
+
 });
