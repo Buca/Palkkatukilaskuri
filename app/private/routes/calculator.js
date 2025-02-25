@@ -49,86 +49,84 @@ function extractQuestions() {
 };
 
 // Function to get response based on selected answers
+/**
+ * Extracts and formats a response based on matching answers from a JSON dataset
+ * @param {string} answers - String containing concatenated answers to compare against
+ * @returns {Object} - Formatted response object with relevant information
+ */
 function getResponse(answers) {
-
+	
 	const response = {};
-
+	
 	// Iterate through the dataset to find a matching response
 	for (let i = 0; i < jsonSheet.length; i++) {
-
+		
 		const entry = jsonSheet[i];
-
+		
+		// Check if the current entry's summary matches the provided answers
 		if (entry['yhteenveto'] === answers) {
-
+		
 			const keys = Object.keys(jsonSheet[0]);
 			const questionsLength = jsonSheet[0]['yhteenveto'].split(';').length;
-
+			
 			// Extract response fields after the question-related ones
 			for (let j = questionsLength + 1; j <= keys.length; j++) {
-
+		
 				const key = keys[j];
 				response[key] = entry[key];
-
+		
 			}
-
-			break;
-
+		
+			break; // Exit loop once match is found
+		
 		}
-
+	
 	}
-
+	
 	// Format numerical values for percentage and monetary amount
 	response['prosentti'] = response['prosentti'] * 100 + " %";
 	response['tuki maksimissaan kuukaudessa'] = response['tuki maksimissaan kuukaudessa'] + " €";
-
+	
 	// Clean and ensure proper punctuation for additional notes
 	if (response['huom!']) {
 
 		response['huom!'] = response['huom!'].trim();
 
 		if (response['huom!'].charAt(response['huom!'].length - 1) !== ".") {
-
 			response['huom!'] = response['huom!'] + ". ";
-
 		}
 
 	}
-
+	
 	if (response['huom! 2']) {
 
 		response['huom! 2'] = response['huom! 2'].trim();
 
 		if (response['huom! 2'].charAt(response['huom! 2'].length - 1) !== ".") {
-
 			response['huom! 2'] = response['huom! 2'] + ".";
-
 		}
 
 	}
-
+	
 	// Combine additional notes into a single key for convenience
 	if (response['huom!'] || response['huom! 2']) {
 
 		response['Huomioitavaa'] = "";
 
 		if (response['huom!']) {
-
 			response['Huomioitavaa'] += response['huom!'] + " ";
-
 		}
 
 		if (response['huom! 2']) {
-
 			response['Huomioitavaa'] += response['huom! 2'];
-
 		}
 
 	}
-
+	
 	// Remove redundant individual note keys
 	delete response['huom!'];
 	delete response['huom! 2'];
-
+	
 	return response;
 
 };
