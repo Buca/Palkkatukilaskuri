@@ -22,11 +22,13 @@ async function removePage() {
 	entry.classList.add('loading');
 
 	const response = await fetch(`/sivu/${pageId}/poista`, {
+		
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 			"Accept": "application/json",
 		}
+	
 	});
 
 	const content = await response.json();
@@ -45,67 +47,85 @@ async function removePage() {
 };
 
 document.querySelectorAll(".move-up").forEach(button => {
-    button.addEventListener("click", async () => {
-        await movePage(button.dataset.id, "up");
-        updateMoveButtons(); // Disable buttons if needed
-    });
+	
+	button.addEventListener("click", async () => {
+	
+		await movePage(button.dataset.id, "up");
+		updateMoveButtons(); // Disable buttons if needed
+	
+	});
+
 });
 
 document.querySelectorAll(".move-down").forEach(button => {
-    button.addEventListener("click", async () => {
-        document.activeElement.blur();
-        await movePage(button.dataset.id, "down");
-        updateMoveButtons(); // Disable buttons if needed
-    });
+	
+	button.addEventListener("click", async () => {
+	
+		document.activeElement.blur();
+		await movePage(button.dataset.id, "down");
+		updateMoveButtons(); // Disable buttons if needed
+	
+	});
+
 });
 
 async function movePage(pageId, direction) {
-    const response = await fetch(`/sivu/reorder`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pageId, direction })
-    });
+	
+	const response = await fetch(`/sivu/reorder`, {
+	
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ pageId, direction })
+	
+	});
 
-    const content = await response.json();
+	const content = await response.json();
 
-    if (content.success) {
-        const pageElement = document.querySelector(`button[data-id="${pageId}"]`).closest("li");
-        if (!pageElement) return;
+	if (content.success) {
+		const pageElement = document.querySelector(`button[data-id="${pageId}"]`).closest("li");
+		if (!pageElement) return;
 
-        const sibling = direction === "up"
-            ? pageElement.previousElementSibling
-            : pageElement.nextElementSibling;
+		const sibling = direction === "up"
+			? pageElement.previousElementSibling
+			: pageElement.nextElementSibling;
 
-        if (!sibling) return;
+		if (!sibling) return;
 
-        const parent = pageElement.parentElement;
+		const parent = pageElement.parentElement;
 
-        if (direction === "up") {
-            parent.insertBefore(pageElement, sibling);
-        } else {
-            parent.insertBefore(sibling, pageElement);
-        }
+		if (direction === "up") {
+			parent.insertBefore(pageElement, sibling);
+		} else {
+			parent.insertBefore(sibling, pageElement);
+		}
 
-        updateMoveButtons(); // Update the button states after movement
-    } else {
-        redirect('/../login');
-    }
-}
+		updateMoveButtons(); // Update the button states after movement
+	
+	} else {
+	
+		redirect('/../login');
+	}
+
+};
 
 function updateMoveButtons() {
-    document.querySelectorAll("li").forEach(li => {
-        const moveUpButton = li.querySelector(".move-up");
-        const moveDownButton = li.querySelector(".move-down");
 
-        if (!moveUpButton || !moveDownButton) return;
+	document.querySelectorAll("li").forEach(li => {
 
-        // Disable "up" button if it's the first child
-        moveUpButton.disabled = !li.previousElementSibling;
+		const moveUpButton = li.querySelector(".move-up");
+		const moveDownButton = li.querySelector(".move-down");
 
-        // Disable "down" button if it's the last child
-        moveDownButton.disabled = !li.nextElementSibling;
-    });
-}
+		if (!moveUpButton || !moveDownButton) return;
+
+		// Disable "up" button if it's the first child
+		moveUpButton.disabled = !li.previousElementSibling;
+
+		// Disable "down" button if it's the last child
+		moveDownButton.disabled = !li.nextElementSibling;
+
+	});
+
+};
 
 // Run this once when the page loads to set the correct initial states
 updateMoveButtons();
@@ -131,12 +151,14 @@ async function updateContactInfo() {
 	updateContactInfoButton.classList.add("loading");
 
 	const response = await fetch("/yhteistiedot", {
+
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 			'Accept': 'application/json',
 		},
 		body: JSON.stringify({ number, email })
+
 	});
 
 	const content = await response.json();
@@ -161,17 +183,23 @@ const cancelUploadFileButton = document.getElementById("cancel-upload-file-butto
 
 // Prevent default behavior for drag events
 ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+
 	dropArea.addEventListener(eventName, (e) => e.preventDefault());
+
 });
 
 // Highlight on dragover
 dropArea.addEventListener("dragover", () => {
+
 	dropArea.classList.add("highlight");
+
 });
 
 // Remove highlight on drag leave
 dropArea.addEventListener("dragleave", () => {
+
 	dropArea.classList.remove("highlight");
+
 });
 
 let file;
