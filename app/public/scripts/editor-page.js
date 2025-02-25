@@ -16,8 +16,10 @@ function onInput() {
 const quill = new Quill('#editor', {
 	modules: {
 		toolbar: [
-			['bold', 'italic', 'underline'],
-			['link']
+			['bold', 'italic', 'underline', 'strike'],
+			['link'],
+			[{ 'size': ['small', false, 'large', 'huge'] }],
+			[{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }]
 		],
 	},
 	placeholder: '',

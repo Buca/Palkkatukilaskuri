@@ -164,8 +164,6 @@ router.get('/', async (req, res, next) => {
 
 router.post("/lataa-uusi", async (req, res, next) => {
 
-	console.log('Upload request!');
-
     try {
 
         if (!req.files || !req.files.file) {

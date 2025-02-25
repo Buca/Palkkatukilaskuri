@@ -248,69 +248,12 @@ async function getAllPages() {
 	}
 
 };
-/*
-async function getPagePositionAndParent(pageId) {
-	const query = `SELECT id, position, parent FROM articles WHERE id = $1`;
-	const { rows } = await pool.query(query, [pageId]);
 
-	if (rows.length === 0) {
-		throw new Error("Page not found");
-	}
-
-	return rows[0]; // returns { id, position, parent }
-}
-
-async function getSiblingPages(parent) {
-	const siblingQuery = `
-		SELECT id, position FROM articles 
-		WHERE parent ${parent ? "= $1" : "IS NULL"} 
-		ORDER BY position ASC
-	`;
-	const { rows: siblings } = await pool.query(siblingQuery, parent ? [parent] : []);
-	return siblings;
-}
-
-async function movePagePosition(pageId, direction) {
-
-	const { position, parent } = await getPagePositionAndParent(pageId);
-	
-	// Get all sibling pages ordered by position
-	const siblings = await getSiblingPages(parent);
-
-	// Find the current page's index
-	const currentIndex = siblings.findIndex(p => p.id === parseInt(pageId));
-
-	// Calculate the index of the page to swap with
-	let swapIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
-
-	if (swapIndex < 0 || swapIndex >= siblings.length) {
-		throw new Error("Cannot move further");
-	}
-
-	const otherPage = siblings[swapIndex];
-
-	// Move the current page by changing its position and the swapped page
-	const newPosition = direction === "up" ? otherPage.position : otherPage.position;
-
-	await pool.query('BEGIN');
-	try {
-		// Update the position of the current page
-		await pool.query(`UPDATE articles SET position = $1 WHERE id = $2`, [otherPage.position, pageId]);
-
-		// Update the position of the page to swap with
-		await pool.query(`UPDATE articles SET position = $1 WHERE id = $2`, [position, otherPage.id]);
-
-		await pool.query('COMMIT');
-	} catch (error) {
-		await pool.query('ROLLBACK');
-		throw error;
-	}
-
-};
-*/
 
 async function movePageUp(id) {
+
     try {
+
         // Get the current page's position and parent
         const currentQuery = `SELECT id, position, parent FROM articles WHERE id = $1`;
         const { rows: currentRows } = await pool.query(currentQuery, [id]);
@@ -339,13 +282,18 @@ async function movePageUp(id) {
         return { success: true };
 
     } catch (error) {
+
         console.error("Error moving page up:", error);
         throw error;
+
     }
-}
+
+};
 
 async function movePageDown(id) {
+
     try {
+
         // Get the current page's position and parent
         const currentQuery = `SELECT id, position, parent FROM articles WHERE id = $1`;
         const { rows: currentRows } = await pool.query(currentQuery, [id]);
@@ -374,10 +322,13 @@ async function movePageDown(id) {
         return { success: true };
 
     } catch (error) {
+
         console.error("Error moving page down:", error);
         throw error;
+
     }
-}
+
+};
 
 
 module.exports = { createPage, editPageById, removePageById, getPageById, getBreadcrumbsById, getFirstLevelOfPages, getAllPages, movePageUp, movePageDown };
