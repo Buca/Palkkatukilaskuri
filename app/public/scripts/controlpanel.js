@@ -265,7 +265,7 @@ async function uploadFile() {
 // Create a hidden file input
 const fileInput = document.createElement("input");
 fileInput.type = "file";
-fileInput.accept = ".xlsx, .xls, .csv";
+fileInput.accept = ".xlsx";
 fileInput.style.display = "none";
 document.body.appendChild(fileInput);
 
@@ -280,7 +280,7 @@ dropArea.addEventListener("click", () => {
 fileInput.addEventListener("change", (event) => {
 
 	const files = event.target.files;
-	const allowedTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "text/csv"];
+	const allowedTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
 
 	if (!allowedTypes.includes(files[0].type)) {
 	
