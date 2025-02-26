@@ -1,8 +1,15 @@
-const { sanitizeHtml } = require('sanitize-html');
+const sanitizeHtml = require('sanitize-html');
 const express = require('express');
 const router = express.Router();
 const { getPageById, editPageById, removePageById, createPage, getBreadcrumbsById, getFirstLevelOfPages, movePageUp, movePageDown } = require('../models/Page');
 const { getContactInfo } = require('../models/ContactInformation');
+
+const sanitizationDefaults = {
+  allowedAttributes: {
+    'a': [ 'href' ],
+    'span': ['class']
+  }
+};
 
 // Route to retrieve a specific page by its ID
 router.get("/:id", async (req, res, next) => {
@@ -94,7 +101,7 @@ router.post("/juuri/uusi", async (req, res, next) => {
 		
 		}
 
-		const sanitizedHTML = sanitizeHtml( html );
+		const sanitizedHTML = sanitizeHtml( html, sanitizationDefaults );
 
 		// Create a new page with no parent (root-level)
 		const page = await createPage(title, sanitizedHTML, null);
@@ -182,7 +189,7 @@ router.post("/:parentId?/uusi", async (req, res, next) => {
 		
 		}
 
-		const sanitizedHTML = sanitizeHtml( html );
+		const sanitizedHTML = sanitizeHtml( html, sanitizationDefaults );
 
 		// Create a new page with the given parent ID
 		const newPage = await createPage(title, sanitizedHTML, parentId);
@@ -255,7 +262,7 @@ router.post("/:id/muokkaa", async (req, res, next) => {
 			return res.redirect("/../login"); // Redirect if not authenticated
 		}
 
-		const sanitizedHTML = sanitizeHtml( html );
+		const sanitizedHTML = sanitizeHtml( html, sanitizationDefaults );
 
 		// Update the page with new content
 		const updatedPage = await editPageById(pageId, title, sanitizedHTML);

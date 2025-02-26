@@ -20,7 +20,8 @@ const quill = new Quill('#editor', {
 			['bold', 'italic', 'underline', 'strike'],
 			['link'],
 			[{ 'size': ['small', false, 'large', 'huge'] }],
-			[{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }]
+			[{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+			[{ 'list': 'ordered'}, { 'list': 'bullet' }],
 		],
 	},
 	placeholder: '',
