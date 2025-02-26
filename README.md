@@ -4,7 +4,7 @@ These instructions provide a detailed guide on how to set up and run the Palkkat
 
 **Prerequisites:**
 
-1. **PostgreSQL Installation:** Ensure you have PostgreSQL installed on your system. You can download the appropriate installer for your operating system from the official PostgreSQL website: [https://www.postgresql.org/download/](https://www.google.com/url?sa=E&source=gmail&q=https://www.postgresql.org/download/)
+1. **PostgreSQL Installation:** Ensure you have PostgreSQL installed on your system. You can download the appropriate installer for your operating system from the official PostgreSQL website: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
 
 2. **Database Creation:** Create a database named `Palkkatukilaskuri` in your PostgreSQL instance. You can use a tool like pgAdmin (which is often included with PostgreSQL installations) or the `psql` command-line utility. Here's an example using `psql`:
 
