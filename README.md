@@ -63,6 +63,13 @@ These instructions provide a detailed guide on how to set up and run the Palkkat
         * **`DB_PASSWORD`:** Do not hardcode database passwords directly in your `.env` file if possible. Use environment variables provided by your hosting platform in production.
         * **`CLIENT_HASHED_PASSWORD`:** In a real application, you should *hash* the client password before storing it. Do not store passwords in plain text.
 
+        To generate a *hashed password*
+    
+        1. Open [bcrypt-generator.com](https://bcrypt-generator.com/)
+        2. Enter your desired password in the input field.
+        3. Click **Generate Hash**.
+        4. Copy the generated hash.
+
 4. **Run the Application:**
 
     From the *same* `app` directory, run the following command:
