@@ -1,17 +1,17 @@
 const pool = require('../config/db');
 
 /**
- * Retrieves all top-level pages (articles with no parent)
- * @returns {Array} Array of objects containing id and title of root articles
+ * Retrieves all top-level pages (pages with no parent)
+ * @returns {Array} Array of objects containing id and title of root pages
  */
 async function getFirstLevelOfPages() {
 
 	try {
 
-		// Query to select only root-level articles (those with no parent)
+		// Query to select only root-level pages (those with no parent)
 		const query = `
 			SELECT id, title
-			FROM articles
+			FROM pages
 			WHERE parent IS NULL
 			ORDER BY position ASC;
 		`;
@@ -21,7 +21,7 @@ async function getFirstLevelOfPages() {
 
 	} catch (error) {
 
-		console.error("Error fetching root articles:", error);
+		console.error("Error fetching root pages:", error);
 		throw error;
 
 	}
@@ -43,7 +43,7 @@ async function createPage(title, text, parent = null) {
 		// Works for both root pages and child pages by checking parent value
 		const positionQuery = `
 			SELECT COALESCE(MAX(position), 0) + 1 AS next_position 
-			FROM articles 
+			FROM pages 
 			WHERE (parent = $1 OR (parent IS NULL AND $1 IS NULL));
 		`;
 
@@ -52,7 +52,7 @@ async function createPage(title, text, parent = null) {
 
 		// Insert the new page with the calculated position
 		const insertQuery = `
-			INSERT INTO articles (title, text, parent, position)
+			INSERT INTO pages (title, text, parent, position)
 			VALUES ($1, $2, $3, $4)
 			RETURNING *;
 		`;
@@ -82,7 +82,7 @@ async function editPageById(id, title, text) {
 	try {
 
 		const query = `
-			UPDATE articles
+			UPDATE pages
 			SET title = $1, text = $2
 			WHERE id = $3
 			RETURNING *;
@@ -110,7 +110,7 @@ async function removePageById(id) {
 
 	try {
 		// First get the parent ID and position of the page to be deleted
-		const parentQuery = `SELECT parent, position FROM articles WHERE id = $1`;
+		const parentQuery = `SELECT parent, position FROM pages WHERE id = $1`;
 		const { rows: parentRows } = await pool.query(parentQuery, [id]);
 
 		if (parentRows.length === 0) {
@@ -122,11 +122,11 @@ async function removePageById(id) {
 		// Delete the page and all its descendants using a recursive CTE query
 		const deleteQuery = `
 			WITH RECURSIVE descendants AS (
-				SELECT id FROM articles WHERE id = $1
+				SELECT id FROM pages WHERE id = $1
 				UNION ALL
-				SELECT a.id FROM articles a INNER JOIN descendants d ON a.parent = d.id
+				SELECT a.id FROM pages a INNER JOIN descendants d ON a.parent = d.id
 			)
-			DELETE FROM articles WHERE id IN (SELECT id FROM descendants)
+			DELETE FROM pages WHERE id IN (SELECT id FROM descendants)
 			RETURNING id;
 		`;
 
@@ -137,14 +137,14 @@ async function removePageById(id) {
 		if (parentId) {
 
 			await pool.query(`
-				UPDATE articles
+				UPDATE pages
 				SET position = position - 1
 				WHERE parent = $1 AND position > $2
 			`, [parentId, deletedPosition]);
 
 		}
 
-		return deletedRows; // Return all deleted articles
+		return deletedRows; // Return all deleted pages
 
 	} catch (error) {
 
@@ -167,14 +167,14 @@ async function getPageById(id) {
 		// Query to get the page details
 		const pageQuery = `
 			SELECT id, title, text, parent
-			FROM articles
+			FROM pages
 			WHERE id = $1;
 		`;
 
 		// Query to get the subpages ordered by position
 		const subpagesQuery = `
 			SELECT id, title
-			FROM articles
+			FROM pages
 			WHERE parent = $1
 			ORDER BY position ASC;
 		`;
@@ -218,7 +218,7 @@ async function getBreadcrumbsById(id) {
 
 			const query = `
 				SELECT id, title, parent
-				FROM articles
+				FROM pages
 				WHERE id = $1
 			`;
 
@@ -252,43 +252,43 @@ async function getAllPages() {
 		
 		const query = `
 			SELECT id, title, text, parent, position
-			FROM articles
+			FROM pages
 			ORDER BY position ASC;
 		`;
 
-		const { rows: articles } = await pool.query(query);
-		const articlesById = {};
+		const { rows: pages } = await pool.query(query);
+		const pagesById = {};
 
 		// First pass: create a lookup table by ID
-		articles.forEach(article => {
+		pages.forEach(article => {
 		
-			articlesById[article.id] = { ...article, children: [] };
+			pagesById[article.id] = { ...article, children: [] };
 		
 		});
 
-		const rootArticles = [];
+		const rootpages = [];
 
 		// Second pass: build the hierarchy
-		articles.forEach(article => {
+		pages.forEach(article => {
 		
 			if (article.parent) {
 		
 				// Add as child to parent
-				articlesById[article.parent]?.children.push(articlesById[article.id]);
+				pagesById[article.parent]?.children.push(pagesById[article.id]);
 		
 			} else {
 			
-				// Add to root articles
-				rootArticles.push(articlesById[article.id]);
+				// Add to root pages
+				rootpages.push(pagesById[article.id]);
 			}
 		
 		});
 
-		return rootArticles; // Return hierarchical structure in order
+		return rootpages; // Return hierarchical structure in order
 
 	} catch (error) {
 
-		console.error('Error fetching articles:', error);
+		console.error('Error fetching pages:', error);
 		throw error;
 
 	}
@@ -305,7 +305,7 @@ async function movePageUp(id) {
 	try {
 
 		// Get the current page's position and parent
-		const currentQuery = `SELECT id, position, parent FROM articles WHERE id = $1`;
+		const currentQuery = `SELECT id, position, parent FROM pages WHERE id = $1`;
 		const { rows: currentRows } = await pool.query(currentQuery, [id]);
 
 		if (currentRows.length === 0) return { success: false, message: "Page not found" };
@@ -314,7 +314,7 @@ async function movePageUp(id) {
 
 		// Find the page directly above (lower position number)
 		const swapQuery = `
-			SELECT id, position FROM articles 
+			SELECT id, position FROM pages 
 			WHERE parent IS NOT DISTINCT FROM $1 AND position < $2 
 			ORDER BY position DESC LIMIT 1;
 		`;
@@ -326,8 +326,8 @@ async function movePageUp(id) {
 		const { id: swapId, position: swapPosition } = swapRows[0];
 
 		// Swap positions with the page above
-		await pool.query(`UPDATE articles SET position = $1 WHERE id = $2`, [swapPosition, id]);
-		await pool.query(`UPDATE articles SET position = $1 WHERE id = $2`, [position, swapId]);
+		await pool.query(`UPDATE pages SET position = $1 WHERE id = $2`, [swapPosition, id]);
+		await pool.query(`UPDATE pages SET position = $1 WHERE id = $2`, [position, swapId]);
 
 		return { success: true };
 
@@ -350,7 +350,7 @@ async function movePageDown(id) {
 	try {
 
 		// Get the current page's position and parent
-		const currentQuery = `SELECT id, position, parent FROM articles WHERE id = $1`;
+		const currentQuery = `SELECT id, position, parent FROM pages WHERE id = $1`;
 		const { rows: currentRows } = await pool.query(currentQuery, [id]);
 
 		if (currentRows.length === 0) return { success: false, message: "Page not found" };
@@ -359,7 +359,7 @@ async function movePageDown(id) {
 
 		// Find the page directly below (higher position number)
 		const swapQuery = `
-			SELECT id, position FROM articles 
+			SELECT id, position FROM pages 
 			WHERE parent IS NOT DISTINCT FROM $1 AND position > $2 
 			ORDER BY position ASC LIMIT 1;
 		`;
@@ -371,8 +371,8 @@ async function movePageDown(id) {
 		const { id: swapId, position: swapPosition } = swapRows[0];
 
 		// Swap positions with the page below
-		await pool.query(`UPDATE articles SET position = $1 WHERE id = $2`, [swapPosition, id]);
-		await pool.query(`UPDATE articles SET position = $1 WHERE id = $2`, [position, swapId]);
+		await pool.query(`UPDATE pages SET position = $1 WHERE id = $2`, [swapPosition, id]);
+		await pool.query(`UPDATE pages SET position = $1 WHERE id = $2`, [position, swapId]);
 
 		return { success: true };
 

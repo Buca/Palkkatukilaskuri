@@ -95,7 +95,7 @@ app.listen(SERVER_PORT, async () => {
 
 	console.log('Initializing database...');
 	await database.query(`
-		CREATE TABLE IF NOT EXISTS articles(
+		CREATE TABLE IF NOT EXISTS pages(
 			id			SERIAL		PRIMARY KEY,
 			title		TEXT		NOT NULL,
 			text		TEXT		NOT NULL,
